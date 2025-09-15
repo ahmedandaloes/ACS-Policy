@@ -1,0 +1,58 @@
+apiVersion: v1
+kind: Policy
+metadata:
+  name: "Network Activity Monitoring"
+  description: "Monitor suspicious network activity and connections at runtime"
+spec:
+  severity: "MEDIUM_SEVERITY"
+  disabled: false
+  categories:
+  - "Anomalous Activity"
+  - "Network"
+  lifecycleStages:
+  - "RUNTIME"
+  eventSource: "DEPLOYMENT_EVENT"
+  whitelists: []
+  exclusions:
+  - name: "Monitoring tools"
+    deployment:
+      scope:
+        label:
+          key: "app.kubernetes.io/component"
+          value: "monitoring"
+  policyVersion: "1.1"
+  policySections:
+  - sectionName: "Unexpected outbound network connections"
+    policyGroups:
+    - fieldName: "Destination Port"
+      booleanOperator: "OR"
+      negate: false
+      values:
+      - value: "22"     # SSH
+      - value: "23"     # Telnet
+      - value: "1433"   # SQL Server
+      - value: "3306"   # MySQL
+      - value: "5432"   # PostgreSQL
+      - value: "6379"   # Redis
+  - sectionName: "Suspicious network tools usage"
+    policyGroups:
+    - fieldName: "Process Name"
+      booleanOperator: "OR"
+      negate: false
+      values:
+      - value: "nmap"
+      - value: "masscan"
+      - value: "zmap"
+      - value: "nc"
+      - value: "netcat"
+      - value: "socat"
+  mitreAttackVectors:
+  - tactic: "TA0007"
+    techniques:
+    - "T1046"
+  - tactic: "TA0011"
+    techniques:
+    - "T1105"
+  criteriaLocked: true
+  mitreVectorsLocked: true
+  isDefault: false

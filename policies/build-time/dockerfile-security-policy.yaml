@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Policy
+metadata:
+  name: "Dockerfile Security Best Practices"
+  description: "Enforce secure Dockerfile practices including non-root user and specific base images"
+spec:
+  severity: "MEDIUM_SEVERITY"
+  disabled: false
+  categories:
+  - "DevOps Best Practices"
+  - "Container Configuration"
+  lifecycleStages:
+  - "BUILD"
+  eventSource: "NOT_APPLICABLE"
+  whitelists: []
+  exclusions:
+  - name: "Legacy applications"
+    image:
+      name:
+        remote: "legacy-app/*"
+  policyVersion: "1.1"
+  policySections:
+  - sectionName: "Dockerfile should specify non-root user"
+    policyGroups:
+    - fieldName: "Dockerfile Instruction Keyword"
+      booleanOperator: "OR"
+      negate: true
+      values:
+      - value: "USER"
+  - sectionName: "Base image should be from approved registry"
+    policyGroups:
+    - fieldName: "Image Remote"
+      booleanOperator: "OR"
+      negate: true
+      values:
+      - value: "registry.company.com/.*"
+      - value: "quay.io/.*"
+      - value: "registry.redhat.io/.*"
+  mitreAttackVectors:
+  - tactic: "TA0004"
+    techniques:
+    - "T1068"
+  criteriaLocked: true
+  mitreVectorsLocked: true
+  isDefault: false
