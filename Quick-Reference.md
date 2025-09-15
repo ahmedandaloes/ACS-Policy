@@ -1,313 +1,274 @@
-# ACS Security Quick Reference
+# ACS Security Audit Quick Reference
 
-This quick reference provides essential commands, configurations, and checklists for Red Hat Advanced Cluster Security (ACS) operations.
+This quick reference provides essential commands and checklists specifically for security auditing of Red Hat Advanced Cluster Security (ACS) deployments.
 
-## Essential CLI Commands
+## Security Audit CLI Commands
 
-### Installation and Setup
+### Authentication and Access Verification
 ```bash
-# Download roxctl CLI
+# Download roxctl CLI for auditing
 curl -O https://mirror.openshift.com/pub/rhacs/assets/latest/bin/Linux/roxctl
 chmod +x roxctl && sudo mv roxctl /usr/local/bin/
 
-# Configure authentication
+# Configure audit session
 export ROX_CENTRAL_ENDPOINT=central.example.com:443
-export ROX_API_TOKEN=your-api-token
+export ROX_API_TOKEN=your-audit-token
 
-# Test connectivity
+# Verify audit access
 roxctl central whoami
+
+# Check authentication status  
+roxctl auth status
 ```
 
-### Image Security
+### Security Audit - Image Vulnerability Assessment
 ```bash
-# Scan an image
-roxctl image scan --image nginx:latest
+# Audit image vulnerabilities
+roxctl image scan --image nginx:latest --severity CRITICAL,HIGH
 
-# Scan with specific output format
-roxctl image scan --image nginx:latest --output table
-roxctl image scan --image nginx:latest --output json
+# Generate audit report for image
+roxctl image scan --image nginx:latest --output json > image-audit-report.json
 
-# Check image for specific vulnerabilities
-roxctl image scan --image nginx:latest --severity CRITICAL,IMPORTANT
+# Check for specific CVEs during audit
+roxctl image scan --image nginx:latest --output table | grep CVE-
 
-# Scan image and save results
-roxctl image scan --image nginx:latest --output json > scan-results.json
+# Audit multiple images for compliance
+for image in $(cat image-list.txt); do
+  roxctl image scan --image $image --severity CRITICAL,HIGH >> audit-results.txt
+done
 ```
 
-### Policy Management
+### Security Audit - Policy Compliance Review
 ```bash
-# List all policies
-roxctl policy list
+# Audit all security policies
+roxctl policy list --output json > policy-audit.json
 
-# Import a policy
-roxctl policy import --file policy.yaml
+# Check policy enforcement status
+roxctl policy list --enabled
 
-# Export policies
-roxctl policy export --output policies.json
+# Audit policy violations
+roxctl violation list --severity CRITICAL,HIGH --output json
 
-# Disable a policy
-roxctl policy patch --name "Policy Name" --disabled true
+# Review policy exclusions (audit risk)
+roxctl policy exclusions list
+
+# Validate policy configuration
+roxctl policy check --file policy.yaml
+```
 
 # Check deployment against policies
 roxctl deployment check --file deployment.yaml
 ```
 
-### Cluster and Sensor Management
+### Security Audit - Cluster and Sensor Status
 ```bash
-# Generate sensor bundle
-roxctl sensor generate k8s --name cluster-name \
-  --central-endpoint central.example.com:443 \
-  --output-dir ./sensor-bundle
+# Audit cluster security status  
+roxctl cluster list --output json > cluster-audit.json
 
-# List clusters
-roxctl cluster list
+# Verify sensor deployment security
+kubectl get pods -n stackrox -l app=sensor -o wide
 
-# Delete a cluster
-roxctl cluster delete --name cluster-name
+# Check sensor communication security
+roxctl sensor status --cluster cluster-name
 
-# Check sensor status
-kubectl get pods -n stackrox -l app=sensor
+# Audit collector security status
+kubectl get daemonset -n stackrox collector
 ```
 
-### Compliance and Reporting
+### Security Audit - Compliance and Vulnerability Assessment
 ```bash
-# Run compliance scan
+# Run security compliance audit
 roxctl compliance run --standard CIS_Kubernetes_v1_5
 
-# Export compliance results
-roxctl compliance export --standard CIS_Kubernetes_v1_5 --output results.json
+# Export compliance audit results
+roxctl compliance export --standard CIS_Kubernetes_v1_5 --output compliance-audit.json
 
-# Generate vulnerability report
-roxctl vuln-mgmt export --output vulns.csv
+# Generate vulnerability audit report
+roxctl vuln-mgmt export --output vulnerability-audit.csv
+
+# Audit network security violations
+roxctl violation list --type NETWORK_POLICY --output json
+
+# Check runtime security violations
+roxctl violation list --type RUNTIME --severity HIGH,CRITICAL
 ```
 
-## Critical Security Checklist (5-Minute Review)
+## Security Audit Checklist (Quick Assessment)
 
-### ✅ Essential Security Checks
-- [ ] ACS Central is accessible via HTTPS with valid certificate
-- [ ] Multi-factor authentication is enabled
-- [ ] Critical vulnerability policies are enforced
-- [ ] Privileged container policies are active
-- [ ] Network policies are blocking unauthorized traffic
-- [ ] Runtime monitoring is collecting data
-- [ ] Backup procedures are tested and functional
+### ✅ Critical Security Audit Points
+- [ ] ACS Central accessible only via HTTPS with valid TLS certificate
+- [ ] Multi-factor authentication enabled for all admin accounts
+- [ ] No default passwords or weak authentication mechanisms
+- [ ] Critical and high severity vulnerability policies enforced
+- [ ] Privileged container policies active and blocking violations
+- [ ] Network policies configured and blocking unauthorized traffic
+- [ ] Runtime monitoring active and collecting security events
+- [ ] Security violation alerts configured and functional
 
-### ⚠️ High-Risk Configuration Issues
-- [ ] Default passwords are changed
-- [ ] Admin users have MFA enabled
-- [ ] Service accounts have minimal permissions
-- [ ] Sensor-to-Central communication is encrypted
-- [ ] External registry access is restricted
-- [ ] Policy violations are being monitored
-- [ ] Audit logs are being collected
+### ⚠️ Security Audit Red Flags
+- [ ] Admin accounts without MFA enabled
+- [ ] Service accounts with excessive permissions
+- [ ] Unencrypted sensor-to-central communication
+- [ ] Unrestricted external registry access
+- [ ] High number of unresolved security violations
+- [ ] Missing or disabled critical security policies
+- [ ] Audit logging disabled or incomplete
+- [ ] Backup and recovery procedures untested
 
-## Common Policy Templates
+## Security Audit - Key Policy Validation
 
-### Block Latest Tags
-```yaml
-# Prevent deployment of images with 'latest' tag
-apiVersion: v1
-kind: Policy
-metadata:
-  name: "No Latest Image Tag"
-spec:
-  severity: "HIGH_SEVERITY"
-  lifecycleStages: ["BUILD", "DEPLOY"]
-  policySections:
-  - policyGroups:
-    - fieldName: "Image Tag"
-      values: [{"value": "latest"}]
-```
+### Critical Security Policies to Audit
+Use these commands to verify essential security policies are in place:
 
-### Require Resource Limits
-```yaml
-# Enforce CPU and memory limits
-apiVersion: v1
-kind: Policy
-metadata:
-  name: "Required Resource Limits"
-spec:
-  severity: "MEDIUM_SEVERITY"
-  lifecycleStages: ["DEPLOY"]
-  policySections:
-  - policyGroups:
-    - fieldName: "Memory Limit"
-      negate: true
-      values: [{"value": ".*"}]
-```
-
-### Block Privileged Containers
-```yaml
-# Prevent privileged container execution
-apiVersion: v1
-kind: Policy
-metadata:
-  name: "No Privileged Containers"
-spec:
-  severity: "HIGH_SEVERITY"
-  lifecycleStages: ["DEPLOY"]
-  policySections:
-  - policyGroups:
-    - fieldName: "Privileged Container"
-      values: [{"value": "true"}]
-```
-
-## Network Security Quick Config
-
-### Basic Network Policy Template
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: default-deny-all
-spec:
-  podSelector: {}
-  policyTypes:
-  - Ingress
-  - Egress
-```
-
-### ACS Component Network Policy
-```yaml
-apiVersion: networking.k8s.io/v1
-kind: NetworkPolicy
-metadata:
-  name: stackrox-network-policy
-  namespace: stackrox
-spec:
-  podSelector:
-    matchLabels:
-      app: central
-  policyTypes:
-  - Ingress
-  ingress:
-  - ports:
-    - protocol: TCP
-      port: 443
-    - protocol: TCP
-      port: 8443
-```
-
-## Troubleshooting Quick Reference
-
-### Common Issues and Solutions
-
-| Issue | Symptoms | Quick Fix |
-|-------|----------|-----------|
-| Sensor offline | No data in dashboard | Check sensor pods: `kubectl get pods -n stackrox` |
-| Policy violations not showing | No alerts generated | Verify admission controller: `kubectl get validatingwebhookconfiguration` |
-| Image scans failing | Scanner errors | Check scanner logs: `kubectl logs -l app=scanner -n stackrox` |
-| Central UI inaccessible | Connection refused | Check Central service: `kubectl get svc -n stackrox` |
-| Database connection issues | Central startup failures | Verify database pod: `kubectl get pods -l app=central-db -n stackrox` |
-
-### Log Collection Commands
 ```bash
-# Collect all ACS logs
-kubectl logs -l app=central -n stackrox --previous > central.log
-kubectl logs -l app=sensor -n stackrox --previous > sensor.log
-kubectl logs -l app=scanner -n stackrox --previous > scanner.log
-kubectl logs -l app=collector -n stackrox --previous > collector.log
+# Verify latest tag policy is enforced
+roxctl policy list | grep -i "latest.*tag"
 
-# Get resource usage
-kubectl top pods -n stackrox
+# Check privileged container blocking
+roxctl policy list | grep -i "privileged"
 
-# Check events
-kubectl get events -n stackrox --sort-by='.lastTimestamp'
+# Validate resource limit enforcement  
+roxctl policy list | grep -i "resource.*limit"
+
+# Verify image scanning policies
+roxctl policy list | grep -i "image.*scan"
 ```
 
-## Performance Optimization
+### Audit Policy Examples for Verification
 
-### Resource Recommendations
-
-| Component | CPU Request | Memory Request | CPU Limit | Memory Limit |
-|-----------|-------------|----------------|-----------|--------------|
-| Central | 1000m | 4Gi | 4000m | 8Gi |
-| Scanner | 500m | 2Gi | 2000m | 4Gi |
-| Sensor | 100m | 500Mi | 500m | 1Gi |
-| Collector | 50m | 100Mi | 200m | 500Mi |
-
-### Scaling Guidelines
+#### 1. Latest Image Tag Prevention (Critical)
+Verify this policy exists and is enabled:
 ```bash
-# Scale scanner for high-volume scanning
-kubectl patch deployment scanner -n stackrox -p '{"spec":{"replicas":3}}'
-
-# Horizontal Pod Autoscaler for scanner
-kubectl autoscale deployment scanner -n stackrox --cpu-percent=70 --min=2 --max=10
+roxctl policy get --name "No Latest Image Tag"
 ```
 
-## Security Hardening Checklist
+#### 2. Privileged Container Blocking (Critical)
+Verify this policy exists and blocks privileged containers:
+```bash
+roxctl policy get --name "Privileged Container"
+```
 
-### Authentication & Authorization
-- [ ] SSO/OIDC configured with corporate identity provider
-- [ ] Default admin password changed
+#### 3. Resource Limits Enforcement (High)
+Verify this policy requires resource limits:
+```bash
+roxctl policy get --name "Required Resource Limits"
+## Security Audit - Network Security Verification
+
+### Network Policy Audit Commands
+```bash
+# Audit network policies 
+kubectl get networkpolicies --all-namespaces -o wide
+
+# Check ACS component network isolation
+kubectl get networkpolicy -n stackrox
+
+# Verify default deny policies exist
+kubectl get networkpolicy default-deny-all
+
+# Audit network violations
+roxctl violation list --type NETWORK_POLICY --output json
+```
+
+### Critical Network Security Audit Points
+- [ ] Default deny-all network policy implemented
+- [ ] ACS components have restrictive network policies
+- [ ] Ingress traffic is controlled and monitored
+- [ ] Inter-namespace communication is restricted
+- [ ] External network access is limited and audited
+
+## Security Audit - Troubleshooting and Log Analysis
+
+### Security-Focused Troubleshooting
+
+| Security Issue | Symptoms | Audit Command |
+|---|---|---|
+| Policy bypass | Violations not blocked | `roxctl policy list --disabled` |
+| Authentication failure | Access denied errors | `roxctl auth status` |
+| Scanner vulnerabilities | Missing CVE data | `kubectl logs -l app=scanner -n stackrox` |
+| Sensor disconnection | No runtime data | `roxctl sensor status --cluster <name>` |
+| TLS certificate issues | Connection errors | `roxctl central db status` |
+
+### Security Log Collection for Audit
+```bash
+# Collect security violation logs
+roxctl violation list --output json > security-violations.json
+
+# Collect policy enforcement logs  
+kubectl logs -l app=admission-controller -n stackrox > policy-enforcement.log
+
+# Collect authentication audit logs
+kubectl logs -l app=central -n stackrox | grep -i auth > auth-audit.log
+
+# Check runtime security events
+kubectl logs -l app=collector -n stackrox | grep -i security > runtime-security.log
+```
+
+## Security Audit - Critical Security Validation
+
+### Authentication & Authorization Audit
+- [ ] SSO/OIDC properly configured and enforced
+- [ ] No default admin passwords in use
 - [ ] Service accounts follow principle of least privilege
-- [ ] API tokens have appropriate expiration
-- [ ] Role-based access control (RBAC) implemented
+- [ ] API tokens have appropriate expiration and rotation
+- [ ] Role-based access control (RBAC) properly implemented
+- [ ] Audit logs capture all authentication events
 
-### Network Security
+### Network Security Audit
 - [ ] TLS certificates are valid and properly configured
-- [ ] Network policies restrict inter-pod communication
-- [ ] Firewall rules limit external access
-- [ ] Load balancer configured with security headers
-- [ ] Internal traffic is encrypted
+- [ ] Network policies restrict inter-pod communication appropriately
+- [ ] External access is properly controlled and monitored
+- [ ] Internal traffic encryption is enforced
+- [ ] Network segmentation is implemented correctly
 
-### Data Protection
-- [ ] Database encryption at rest enabled
-- [ ] Backup encryption configured
-- [ ] Secrets stored in external secret management
-- [ ] Audit logs protected and retained
-- [ ] Data classification policies applied
+### Data Protection Audit  
+- [ ] Database encryption at rest is enabled and verified
+- [ ] Backup encryption is configured and tested
+- [ ] Secrets are stored securely (not in plain text)
+- [ ] Audit logs are protected and retained per policy
+- [ ] Data classification policies are applied and enforced
 
-### Monitoring & Alerting
-- [ ] Security metrics exported to monitoring system
-- [ ] Critical alerts configured and tested
-- [ ] Log forwarding to SIEM implemented
-- [ ] Incident response procedures documented
-- [ ] Regular security reviews scheduled
+### Policy Enforcement Audit
+- [ ] Critical security policies are enabled and enforcing
+- [ ] Policy violations are properly detected and blocked
+- [ ] Policy exclusions are justified and documented
+- [ ] Runtime security monitoring is active and alerting
+- [ ] Compliance frameworks are properly implemented
 
-## Emergency Response
+## Security Incident Response for Auditors
 
-### Incident Response Commands
+### Security Incident Detection Commands
 ```bash
-# Quickly disable a problematic policy
-roxctl policy patch --name "Policy Name" --disabled true
+# Check for active security violations
+roxctl violation list --state ACTIVE --severity CRITICAL,HIGH
 
-# Get all active violations
-roxctl alert list --output json | jq '.alerts[] | select(.state == "ACTIVE")'
+# Audit runtime security events
+roxctl alert list --type RUNTIME --output json
 
-# Emergency cluster isolation
-kubectl patch networkpolicy default-deny-all -p '{"spec":{"ingress":[],"egress":[]}}'
+# Review policy enforcement failures
+roxctl violation list --type POLICY_VIOLATION --output table
 
-# Collect forensic data
-kubectl get pods --all-namespaces -o wide > pods-snapshot.txt
-kubectl get events --all-namespaces --sort-by='.lastTimestamp' > events-snapshot.txt
+# Check for compliance violations
+roxctl compliance run --standard CIS_Kubernetes_v1_5
 ```
 
-### Emergency Contacts Template
-```
-Security Team: security@company.com
-On-call Engineer: +1-XXX-XXX-XXXX
-Incident Commander: +1-XXX-XXX-XXXX
-Legal/Compliance: legal@company.com
-```
+### Security Audit Documentation
 
-## Useful URLs and References
+For comprehensive security audit procedures, refer to:
+- [ACS Audit Checklist](ACS-Audit-Checklist.md) - Complete 200+ point security audit
+- [Security Hardening Guide](config/security/security-hardening.md) - Security configuration verification
+- [Compliance Report Template](templates/compliance-report-template.md) - Audit reporting format
 
-### Official Documentation
-- [Red Hat ACS Documentation](https://docs.openshift.com/acs/)
-- [ACS API Reference](https://docs.openshift.com/acs/operating/manage-user-access/configure-short-lived-access.html)
-- [ACS CLI Reference](https://docs.openshift.com/acs/cli/roxctl.html)
+### Security Audit References
 
-### Security Standards
+#### Standards and Frameworks
 - [CIS Kubernetes Benchmark](https://www.cisecurity.org/benchmark/kubernetes)
 - [NIST Cybersecurity Framework](https://www.nist.gov/cyberframework)
 - [OWASP Kubernetes Security](https://cheatsheetseries.owasp.org/cheatsheets/Kubernetes_Security_Cheat_Sheet.html)
 
-### Tools and Utilities
-- [Kubernetes Security Tools](https://kubernetes.io/docs/concepts/security/)
-- [YAML Lint](https://www.yamllint.com/)
-- [JSON Formatter](https://jsonformatter.org/)
+#### Official ACS Documentation  
+- [Red Hat ACS Security Guide](https://docs.openshift.com/acs/operating/manage-user-access/configure-short-lived-access.html)
+- [ACS CLI Reference](https://docs.openshift.com/acs/cli/roxctl.html)
 
 ---
 
-*Keep this reference handy for quick ACS operations and security checks.*
+*This reference provides essential commands and checklists for conducting comprehensive security audits of Red Hat Advanced Cluster Security deployments.*

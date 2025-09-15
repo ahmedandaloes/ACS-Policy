@@ -1,37 +1,53 @@
-# ACS Policy Templates
+# ACS Security Policy Reference Templates
 
-This directory contains ready-to-use policy templates for Red Hat Advanced Cluster Security (ACS). These policies can be imported directly into your ACS environment or customized based on your specific requirements.
+This directory contains reference security policy templates for Red Hat Advanced Cluster Security (ACS) security audit verification. These policies serve as examples of critical security configurations that should be validated during security audits.
 
-## Policy Categories
+## Security Policy Audit Categories
 
-### Build-Time Policies
-- [Latest Image Tag Policy](build-time/latest-image-tag-policy.yaml) - Prevents deployment of images with 'latest' tag
-- [Dockerfile Security Policy](build-time/dockerfile-security-policy.yaml) - Enforces secure Dockerfile practices
-- [Base Image Policy](build-time/base-image-policy.yaml) - Restricts allowed base images
+### Build-Time Security Policies (Audit Verification)
+- [Latest Image Tag Policy](build-time/latest-image-tag-policy.yaml) - Verify prevention of 'latest' tag deployments
+- [Dockerfile Security Policy](build-time/dockerfile-security-policy.yaml) - Validate secure Dockerfile practices enforcement
+- [Base Image Policy](build-time/base-image-policy.yaml) - Audit base image restriction controls
 
-### Deploy-Time Policies
-- [Privileged Container Policy](deploy-time/privileged-container-policy.yaml) - Blocks privileged containers
-- [Resource Limits Policy](deploy-time/resource-limits-policy.yaml) - Enforces resource limits
-- [Security Context Policy](deploy-time/security-context-policy.yaml) - Enforces secure security contexts
+### Deploy-Time Security Policies (Audit Verification)  
+- [Privileged Container Policy](deploy-time/privileged-container-policy.yaml) - Verify privileged container blocking
+- [Resource Limits Policy](deploy-time/resource-limits-policy.yaml) - Audit resource limit enforcement
+- [Security Context Policy](deploy-time/security-context-policy.yaml) - Validate security context requirements
 
-### Runtime Policies
-- [Process Execution Policy](runtime/process-execution-policy.yaml) - Monitors and controls process execution
-- [Network Activity Policy](runtime/network-activity-policy.yaml) - Monitors network connections
-- [File System Policy](runtime/filesystem-policy.yaml) - Monitors file system access
+### Runtime Security Policies (Audit Verification)
+- [Process Execution Policy](runtime/process-execution-policy.yaml) - Audit runtime process monitoring
+- [Network Activity Policy](runtime/network-activity-policy.yaml) - Verify network connection monitoring  
+- [File System Policy](runtime/filesystem-policy.yaml) - Validate file system access controls
 
-## Usage
+## Security Audit Usage
 
-1. Review each policy template for your environment requirements
-2. Customize policy parameters as needed
-3. Import policies into ACS using the CLI or Web UI:
-   ```bash
-   roxctl policy import --file <policy-file.yaml>
-   ```
+### Policy Validation Commands
+```bash
+# Verify policy exists and is enabled
+roxctl policy get --name "Policy Name"
 
-## Policy Management Best Practices
+# Check policy enforcement status
+roxctl policy list --enabled | grep "Policy Name"
 
-- Test policies in development environments before production deployment
-- Use policy exclusions sparingly and document justifications
-- Regularly review and update policies based on threat landscape
-- Monitor policy violations and adjust thresholds as needed
-- Maintain version control for policy changes
+# Validate policy configuration
+roxctl policy check --file <policy-file.yaml>
+
+# Audit policy violations
+roxctl violation list --policy "Policy Name"
+```
+
+## Security Audit Best Practices
+
+### Critical Policy Audit Checks
+- Verify all critical security policies are enabled and enforcing
+- Validate policy configurations match security requirements
+- Review policy exclusions for security risks and proper justification
+- Audit policy violation patterns and remediation status
+- Ensure policy enforcement is consistent across all environments
+
+### Audit Documentation
+- Document all security policy verification results
+- Track any missing or misconfigured security policies
+- Record policy exclusions and their security justifications  
+- Maintain audit trail of policy compliance status
+- Report policy gaps and remediation recommendations

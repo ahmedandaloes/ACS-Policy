@@ -1,12 +1,12 @@
-# Contributing to ACS Policy Repository
+# Contributing to ACS Security Audit Repository
 
-Thank you for your interest in contributing to the Red Hat Advanced Cluster Security (ACS) Policy Repository! This document provides guidelines for contributing to this project.
+Thank you for your interest in contributing to the Red Hat Advanced Cluster Security (ACS) Security Audit Repository! This document provides guidelines for contributing security audit content to this project.
 
 ## Table of Contents
 
 1. [Code of Conduct](#code-of-conduct)
 2. [How to Contribute](#how-to-contribute)
-3. [Contribution Guidelines](#contribution-guidelines)
+3. [Security Audit Contribution Guidelines](#security-audit-contribution-guidelines)
 4. [Development Setup](#development-setup)
 5. [Submitting Changes](#submitting-changes)
 6. [Review Process](#review-process)
@@ -17,107 +17,111 @@ This project follows a standard code of conduct to ensure a welcoming environmen
 
 - **Be respectful**: Treat everyone with respect and professionalism
 - **Be inclusive**: Welcome newcomers and help them get started
-- **Be collaborative**: Work together constructively to improve the project
-- **Be constructive**: Provide helpful feedback and suggestions
+- **Be collaborative**: Work together constructively to improve security audit practices
+- **Be constructive**: Provide helpful feedback and security insights
 
 ## How to Contribute
 
-There are several ways you can contribute to this repository:
+There are several ways you can contribute to this security audit repository:
 
-### 1. Reporting Issues
-- **Security Policy Updates**: Suggest improvements to existing policies
-- **Missing Coverage**: Identify security areas not covered in the audit checklist
-- **Documentation Issues**: Report unclear or outdated documentation
-- **Configuration Problems**: Report issues with configuration examples
+### 1. Reporting Security Audit Issues
+- **Audit Gap Analysis**: Identify missing security audit checkpoints
+- **Policy Validation Issues**: Report problems with security policy validation procedures
+- **Documentation Issues**: Report unclear or outdated audit documentation
+- **Security Configuration Problems**: Report issues with security audit procedures
 
-### 2. Contributing Content
-- **New Policies**: Add new ACS policy templates
-- **Enhanced Checklist**: Expand the audit checklist with new items
-- **Configuration Guides**: Add new configuration examples
-- **Best Practices**: Share implementation experiences and lessons learned
+### 2. Contributing Security Audit Content
+- **New Audit Checkpoints**: Add new security audit items to the checklist
+- **Enhanced Security Policies**: Add security policy reference templates for audit verification
+- **Security Configuration Audit**: Add security hardening verification procedures
+- **Audit Best Practices**: Share security audit experiences and lessons learned
 
-### 3. Improving Documentation
-- **Clarity**: Improve existing documentation for better understanding
-- **Examples**: Add practical examples and use cases
-- **Troubleshooting**: Add common issues and solutions
-- **Translations**: Translate content to other languages
+### 3. Improving Security Audit Documentation
+- **Clarity**: Improve existing security audit documentation
+- **Examples**: Add practical security audit examples and use cases
+- **Troubleshooting**: Add common security audit issues and solutions
+- **Audit Procedures**: Enhance security audit step-by-step procedures
 
-## Contribution Guidelines
+## Security Audit Contribution Guidelines
 
-### Policy Templates
+### Security Policy Templates
 
-When contributing new policy templates:
+When contributing new security policy reference templates for audit verification:
 
-1. **Follow naming conventions**: Use descriptive names that clearly indicate the policy purpose
-2. **Include metadata**: Provide comprehensive metadata including:
-   - Description of what the policy does
-   - Severity level
-   - Applicable lifecycle stages
-   - MITRE ATT&CK mappings (if applicable)
-3. **Add exclusions**: Include reasonable exclusions for system components
-4. **Test thoroughly**: Ensure policies work in real environments
-5. **Document exceptions**: Clearly document when and why exceptions might be needed
+1. **Follow security audit focus**: Ensure policy templates are suitable for security audit verification
+2. **Include validation metadata**: Provide comprehensive metadata including:
+   - Security control description and audit purpose
+   - Risk level and impact assessment
+   - Audit validation procedures
+   - Compliance framework mappings (CIS, NIST, etc.)
+3. **Add audit verification steps**: Include commands to verify policy status during audits
+4. **Document audit implications**: Clearly document security implications and audit findings
+5. **Security-focused naming**: Use descriptive names that clearly indicate the security control
 
-Example policy structure:
+Example security policy template structure:
 ```yaml
 apiVersion: v1
 kind: Policy
 metadata:
-  name: "Descriptive Policy Name"
-  description: "Clear description of what this policy enforces"
+  name: "Security Control Name"
+  description: "Security audit description of what this policy validates"
+  annotations:
+    audit.purpose: "Security control verification"
+    compliance.framework: "CIS Kubernetes Benchmark"
 spec:
   severity: "HIGH_SEVERITY"
   disabled: false
   categories:
-  - "Relevant Category"
+  - "Security Audit Category"
   lifecycleStages:
   - "BUILD|DEPLOY|RUNTIME"
-  # ... policy implementation
+  # ... security policy implementation
 ```
 
-### Audit Checklist Items
+### Security Audit Checklist Items
 
-When adding new audit checklist items:
+When adding new security audit checklist items:
 
-1. **Be specific**: Use actionable, measurable criteria
-2. **Include context**: Explain why the item is important
-3. **Provide guidance**: Include implementation guidance where possible
-4. **Reference standards**: Link to relevant security frameworks
-5. **Consider impact**: Assess the business and operational impact
+1. **Security-focused criteria**: Use actionable, security-specific validation criteria
+2. **Include audit context**: Explain why the security control is critical for audit
+3. **Provide validation guidance**: Include specific audit validation procedures
+4. **Reference security standards**: Link to relevant security frameworks (CIS, NIST, OWASP)
+5. **Consider security impact**: Assess the security risk and compliance implications
 
-Format for checklist items:
+Format for security audit checklist items:
 ```markdown
-- [ ] **Item description** - Additional context about implementation and importance
+- [ ] **Security control description** - Audit validation procedure and security importance
 ```
 
-### Configuration Examples
+### Security Configuration Audit Examples
 
-When contributing configuration examples:
+When contributing security configuration audit examples:
 
-1. **Use realistic scenarios**: Base examples on common real-world deployments
-2. **Include comments**: Explain complex configuration options
-3. **Security focus**: Prioritize security best practices
-4. **Environment awareness**: Consider different deployment environments
-5. **Version compatibility**: Specify ACS and Kubernetes version requirements
+1. **Use security-focused scenarios**: Base examples on security audit requirements
+2. **Include security validation commands**: Explain security verification procedures
+3. **Security hardening focus**: Prioritize security audit validation practices
+4. **Audit environment awareness**: Consider different audit scenarios and environments
+5. **Compliance compatibility**: Specify compliance framework requirements
 
-### Documentation Standards
+### Security Audit Documentation Standards
 
-1. **Clear structure**: Use consistent headings and organization
-2. **Practical examples**: Include working code examples
-3. **Current information**: Ensure all information is up-to-date
-4. **Cross-references**: Link to related documentation
-5. **Accessibility**: Write for different skill levels
+1. **Security audit structure**: Use consistent headings focused on security validation
+2. **Practical audit examples**: Include working security validation commands and procedures
+3. **Current security information**: Ensure all security controls and procedures are up-to-date
+4. **Cross-references**: Link to related security documentation and compliance frameworks
+5. **Security accessibility**: Write for different security audit skill levels
 
-## Development Setup
+## Development Setup for Security Audit Contributions
 
 ### Prerequisites
 
 - Git
 - Text editor or IDE
-- Access to a Kubernetes cluster for testing (optional)
-- ACS installation for policy testing (optional)
+- Access to a Kubernetes cluster for security validation (optional)
+- ACS installation for security policy validation (optional)
+- Security audit tools and CLI access
 
-### Local Development
+### Local Development for Security Audit Content
 
 1. **Fork and clone the repository**:
    ```bash
@@ -125,133 +129,134 @@ When contributing configuration examples:
    cd ACS-Policy
    ```
 
-2. **Create a feature branch**:
+2. **Create a security audit feature branch**:
    ```bash
-   git checkout -b feature/your-feature-name
+   git checkout -b security-audit/your-feature-name
    ```
 
-3. **Make your changes**:
-   - Add new files or modify existing ones
-   - Follow the established file structure
-   - Test your changes if possible
+3. **Make your security audit changes**:
+   - Add new security audit items or modify existing ones
+   - Follow the established security audit file structure
+   - Test your security validation procedures if possible
 
-4. **Validate your changes**:
+4. **Validate your security audit changes**:
    ```bash
-   # Check YAML syntax for policies
+   # Check YAML syntax for security policies
    yamllint policies/**/*.yaml
    
-   # Check markdown formatting
+   # Check markdown formatting for audit documentation
    markdownlint *.md **/*.md
    
-   # Test policies if you have ACS access
-   roxctl policy import --file policies/your-new-policy.yaml
+   # Test security policy validation if you have ACS access
+   roxctl policy get --name "Security Policy Name"
+   roxctl policy check --file policies/your-security-policy.yaml
    ```
 
-## Submitting Changes
+## Submitting Security Audit Changes
 
-### Pull Request Process
+### Pull Request Process for Security Audit Content
 
-1. **Prepare your changes**:
-   - Ensure all files are properly formatted
-   - Update relevant documentation
-   - Add appropriate examples
-   - Test your changes thoroughly
+1. **Prepare your security audit changes**:
+   - Ensure all security audit procedures are properly documented
+   - Update relevant security audit documentation
+   - Add appropriate security validation examples
+   - Test your security audit procedures thoroughly
 
-2. **Create a pull request**:
-   - Use a descriptive title that explains the change
-   - Include a detailed description of what you've added or changed
-   - Reference any related issues
-   - Include testing information if applicable
+2. **Create a security audit pull request**:
+   - Use a descriptive title that explains the security audit enhancement
+   - Include a detailed description of security controls added or changed
+   - Reference any related security standards or compliance frameworks
+   - Include security validation testing information if applicable
 
-3. **Pull request template**:
+3. **Security audit pull request template**:
    ```markdown
-   ## Description
-   Brief description of changes made.
+   ## Security Audit Description
+   Brief description of security audit changes made.
 
-   ## Type of Change
-   - [ ] New policy template
-   - [ ] Audit checklist update
-   - [ ] Configuration guide
-   - [ ] Documentation improvement
-   - [ ] Bug fix
+   ## Type of Security Audit Change
+   - [ ] New security audit checkpoint
+   - [ ] Security policy reference template
+   - [ ] Security configuration audit guide
+   - [ ] Security audit documentation improvement
+   - [ ] Security audit procedure fix
 
-   ## Testing
-   - [ ] Tested with ACS version X.X
-   - [ ] Validated YAML syntax
-   - [ ] Reviewed for security best practices
-   - [ ] Documentation is clear and accurate
+   ## Security Validation Testing
+   - [ ] Tested with ACS version X.X in audit environment
+   - [ ] Validated security policy configurations
+   - [ ] Reviewed for security audit best practices
+   - [ ] Security audit documentation is clear and accurate
 
-   ## Checklist
-   - [ ] Changes follow project conventions
-   - [ ] Documentation updated where necessary
-   - [ ] Examples are practical and tested
-   - [ ] Security implications considered
+   ## Security Audit Checklist
+   - [ ] Changes follow security audit conventions
+   - [ ] Security documentation updated where necessary
+   - [ ] Security validation examples are practical and tested
+   - [ ] Security compliance implications considered
    ```
 
-### Commit Message Guidelines
+### Commit Message Guidelines for Security Audit
 
-Use clear, descriptive commit messages:
+Use clear, descriptive commit messages focused on security audit:
 
 ```
-feat: add network segmentation policy template
+audit: add privileged container security audit checkpoint
 
-- Add policy to enforce network segmentation
-- Include exclusions for system namespaces
-- Add documentation and examples
-- Map to MITRE ATT&CK framework
+- Add security audit procedure for privileged container detection
+- Include policy validation commands for audit verification
+- Add security risk assessment and remediation guidance
+- Map to CIS Kubernetes Benchmark requirements
 ```
 
-Commit message format:
-- `feat:` for new features
-- `fix:` for bug fixes
-- `docs:` for documentation updates
-- `config:` for configuration changes
-- `refactor:` for code restructuring
+Security audit commit message format:
+- `audit:` for new security audit features
+- `security:` for security control updates
+- `compliance:` for compliance framework updates
+- `docs:` for security audit documentation updates
+- `fix:` for security audit procedure fixes
 
-## Review Process
+## Security Audit Review Process
 
-### Review Criteria
+### Security Audit Review Criteria
 
 Pull requests are reviewed based on:
 
-1. **Security accuracy**: Ensures security recommendations are correct
-2. **Practical applicability**: Verifies content works in real environments
-3. **Documentation quality**: Confirms clear and helpful documentation
-4. **Consistency**: Maintains consistency with existing content
-5. **Completeness**: Ensures all necessary components are included
+1. **Security accuracy**: Ensures security audit procedures and controls are correct
+2. **Audit practicality**: Verifies security audit content works in real audit environments
+3. **Security documentation quality**: Confirms clear and actionable security audit documentation
+4. **Compliance consistency**: Maintains consistency with security standards and frameworks
+5. **Security completeness**: Ensures all necessary security audit components are included
 
 ### Review Timeline
 
-- Initial review: Within 48-72 hours
-- Follow-up reviews: Within 24-48 hours after updates
-- Final approval: After all feedback is addressed
+- Initial security audit review: Within 48-72 hours
+- Follow-up reviews: Within 24-48 hours after security audit updates
+- Final security approval: After all security feedback is addressed
 
-### Reviewer Responsibilities
+### Security Audit Reviewer Responsibilities
 
 Reviewers will:
-- Provide constructive feedback
-- Test configurations when possible
-- Verify security best practices
-- Ensure documentation clarity
-- Check for completeness and accuracy
+- Provide constructive security audit feedback
+- Validate security configurations when possible
+- Verify security audit best practices
+- Ensure security audit documentation clarity
+- Check for security audit completeness and accuracy
 
 ## Recognition
 
-Contributors will be recognized in several ways:
+Contributors will be recognized for their security audit contributions in several ways:
 
-1. **Contributors file**: Listed in CONTRIBUTORS.md
-2. **Release notes**: Acknowledged in release announcements
-3. **Social media**: Featured in project social media posts
-4. **Conference talks**: Highlighted in community presentations
+1. **Security contributors file**: Listed in SECURITY-CONTRIBUTORS.md
+2. **Security audit release notes**: Acknowledged in security audit release announcements
+3. **Security community posts**: Featured in security community communications
+4. **Security conference presentations**: Highlighted in security audit presentations
 
-## Getting Help
+## Getting Security Audit Help
 
-If you need help contributing:
+If you need help contributing security audit content:
 
-1. **Open an issue**: Ask questions or request guidance
-2. **Join discussions**: Participate in GitHub discussions
-3. **Review examples**: Look at existing content for patterns
-4. **Start small**: Begin with minor improvements or additions
+1. **Open a security audit issue**: Ask security-specific questions or request audit guidance
+2. **Join security discussions**: Participate in security audit GitHub discussions
+3. **Review security audit examples**: Look at existing security audit content for patterns
+4. **Start with security basics**: Begin with minor security audit improvements or additions
 
 ## License
 
@@ -259,9 +264,9 @@ By contributing to this repository, you agree that your contributions will be li
 
 ## Questions?
 
-If you have questions about contributing, please:
-- Open an issue with the question label
-- Review existing issues and discussions
-- Check the documentation for guidance
+If you have questions about contributing security audit content, please:
+- Open an issue with the security-audit label
+- Review existing security audit issues and discussions
+- Check the security audit documentation for guidance
 
-Thank you for helping improve ACS security for the community!
+Thank you for helping improve ACS security auditing for the community!

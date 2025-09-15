@@ -1,129 +1,65 @@
-# ACS Configuration Guidelines
+# ACS Security Audit Configuration
 
-This directory contains best practice configuration guides for Red Hat Advanced Cluster Security (ACS) components.
+This directory contains security-focused configuration guidelines for auditing Red Hat Advanced Cluster Security (ACS) deployments.
 
-## Configuration Guides
+## Security Audit Configuration
 
-### Installation and Setup
-- [Initial Installation Guide](installation/initial-setup.md) - Step-by-step ACS installation
-- [High Availability Setup](installation/ha-setup.md) - Configuring ACS for high availability
-- [Upgrade Procedures](installation/upgrade-guide.md) - Safe upgrade practices
+### Security Hardening Verification
+- [Security Hardening Checklist](security/security-hardening.md) - Security configuration verification
 
-### Component Configuration
-- [Central Configuration](components/central-config.md) - ACS Central best practices
-- [Sensor Configuration](components/sensor-config.md) - Sensor deployment and tuning
-- [Scanner Configuration](components/scanner-config.md) - Image scanner optimization
-- [Collector Configuration](components/collector-config.md) - Runtime data collection tuning
+## Security Audit Quick Configurations
 
-### Security Hardening
-- [TLS Configuration](security/tls-config.md) - Certificate management and TLS setup
-- [Network Security](security/network-config.md) - Network policies and firewall rules
-- [Authentication Setup](security/auth-config.md) - SSO and RBAC configuration
-- [Secrets Management](security/secrets-config.md) - Secure secrets handling
+### Security Validation Commands
+```bash
+# Verify Central security configuration
+roxctl central whoami
 
-### Performance and Scaling
-- [Resource Planning](performance/resource-planning.md) - Capacity planning guidelines
-- [Performance Tuning](performance/tuning-guide.md) - Optimization recommendations
-- [Scaling Guidelines](performance/scaling-guide.md) - Horizontal and vertical scaling
+# Check TLS configuration
+roxctl central db status
 
-### Integration
-- [CI/CD Integration](integration/cicd-integration.md) - DevSecOps pipeline integration
-- [SIEM Integration](integration/siem-integration.md) - Log forwarding and alerting
-- [Monitoring Integration](integration/monitoring-setup.md) - Metrics and dashboards
+# Validate policy compliance
+roxctl policy list --enabled
 
-## Quick Start Configurations
-
-### Minimal Production Setup
-```yaml
-# Basic Central configuration for production
-apiVersion: platform.stackrox.io/v1alpha1
-kind: Central
-metadata:
-  name: stackrox-central-services
-  namespace: stackrox
-spec:
-  central:
-    exposure:
-      loadBalancer:
-        enabled: true
-        port: 443
-    persistence:
-      persistentVolumeClaim:
-        claimName: stackrox-db
-  scanner:
-    analyzer:
-      scaling:
-        autoScaling: ENABLED
-        maxReplicas: 5
-        minReplicas: 2
+# Check for security violations
+roxctl violation list --severity CRITICAL,HIGH
 ```
 
-### Security-Hardened Configuration
-```yaml
-# Enhanced security configuration
-apiVersion: platform.stackrox.io/v1alpha1
-kind: Central
-metadata:
-  name: stackrox-central-services
-  namespace: stackrox
-spec:
-  central:
-    defaultTLSSecret:
-      name: central-tls
-    exposure:
-      route:
-        enabled: true
-    persistence:
-      persistentVolumeClaim:
-        claimName: central-db
-        storageClass: encrypted-ssd
-  scanner:
-    scannerComponent: Enabled
-```
+## Security Audit Validation
 
-## Configuration Validation
-
-Use the following commands to validate your configuration:
+Use the following commands to validate security configurations during audit:
 
 ```bash
-# Validate Central installation
+# Check Central installation security
 roxctl central check
 
-# Test sensor connectivity
-roxctl sensor get-bundle <cluster-name>
+# Validate sensor security posture
+roxctl sensor status
 
-# Verify scanner functionality
+# Verify image scanning is enabled
 roxctl image scan --image <test-image>
 
-# Check policy status
-roxctl policy list
+# Check policy enforcement status
+roxctl policy list --enabled
 ```
 
-## Environment-Specific Configurations
+## Security Audit Focus
 
-### Development Environment
-- Reduced resource allocation
-- Relaxed security policies for testing
-- Enhanced logging for debugging
+This configuration is specifically designed for security auditing:
 
-### Staging Environment
-- Production-like security policies
-- Full monitoring and alerting
-- Performance testing configurations
+### Security Audit Areas
+- TLS/SSL certificate validation
+- Authentication and authorization verification  
+- Network security configuration review
+- Policy enforcement verification
+- Compliance status checking
 
-### Production Environment
-- Maximum security hardening
-- High availability setup
-- Optimized performance settings
-- Comprehensive backup strategy
+## Common Security Audit Issues
 
-## Troubleshooting
+Security misconfigurations found during audits:
 
-Common configuration issues and solutions:
+1. **Weak TLS configuration**: Verify certificate validity and encryption strength
+2. **Inadequate access controls**: Review RBAC and authentication mechanisms  
+3. **Policy gaps**: Check for missing or disabled security policies
+4. **Violation monitoring**: Ensure security violations are properly tracked and remediated
 
-1. **Sensor connectivity issues**: Check network policies and firewall rules
-2. **Scanner performance**: Adjust resource limits and scaling parameters
-3. **Central UI access**: Verify ingress/route configuration and certificates
-4. **Policy violations**: Review exclusions and policy tuning
-
-For detailed troubleshooting guides, see the individual configuration files in each subdirectory.
+For detailed security audit procedures, see the [ACS Audit Checklist](../ACS-Audit-Checklist.md).
