@@ -1,0 +1,34 @@
+apiVersion: v1
+kind: Policy
+metadata:
+  name: "Latest Image Tag"
+  description: "Alert on deployments with images using 'latest' tag"
+spec:
+  severity: "HIGH_SEVERITY"
+  disabled: false
+  categories:
+  - "DevOps Best Practices"
+  - "Container Configuration"
+  lifecycleStages:
+  - "BUILD"
+  - "DEPLOY"
+  eventSource: "NOT_APPLICABLE"
+  whitelists: []
+  exclusions:
+  - name: "kube-system namespace"
+    deployment:
+      scope:
+        namespace: "kube-system"
+  policyVersion: "1.1"
+  policySections:
+  - sectionName: "Image tag should not be 'latest'"
+    policyGroups:
+    - fieldName: "Image Tag"
+      booleanOperator: "OR"
+      negate: false
+      values:
+      - value: "latest"
+  mitreAttackVectors: []
+  criteriaLocked: true
+  mitreVectorsLocked: true
+  isDefault: false

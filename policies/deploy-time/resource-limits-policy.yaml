@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Policy
+metadata:
+  name: "Resource Limits Required"
+  description: "Ensure containers have resource limits defined"
+spec:
+  severity: "MEDIUM_SEVERITY"
+  disabled: false
+  categories:
+  - "DevOps Best Practices"
+  - "Container Configuration"
+  lifecycleStages:
+  - "DEPLOY"
+  eventSource: "NOT_APPLICABLE"
+  whitelists: []
+  exclusions:
+  - name: "System namespaces"
+    deployment:
+      scope:
+        namespace: "kube-system|kube-public|kube-node-lease"
+  policyVersion: "1.1"
+  policySections:
+  - sectionName: "Container resource limits"
+    policyGroups:
+    - fieldName: "Memory Limit"
+      booleanOperator: "OR"
+      negate: true
+      values:
+      - value: ".*"
+    - fieldName: "CPU Limit"
+      booleanOperator: "OR"  
+      negate: true
+      values:
+      - value: ".*"
+  mitreAttackVectors:
+  - tactic: "TA0005"
+    techniques:
+    - "T1496"
+  criteriaLocked: true
+  mitreVectorsLocked: true
+  isDefault: false

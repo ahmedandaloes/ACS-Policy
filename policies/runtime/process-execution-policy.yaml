@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Policy
+metadata:
+  name: "Suspicious Process Execution"
+  description: "Detect suspicious process execution patterns at runtime"
+spec:
+  severity: "MEDIUM_SEVERITY"
+  disabled: false
+  categories:
+  - "Anomalous Activity"
+  - "Runtime"
+  lifecycleStages:
+  - "RUNTIME"
+  eventSource: "DEPLOYMENT_EVENT"
+  whitelists: []
+  exclusions:
+  - name: "Development environments"
+    deployment:
+      scope:
+        namespace: "dev"
+  policyVersion: "1.1"
+  policySections:
+  - sectionName: "Suspicious process activities"
+    policyGroups:
+    - fieldName: "Process Name"
+      booleanOperator: "OR"
+      negate: false
+      values:
+      - value: "nc"
+      - value: "netcat"
+      - value: "ncat"
+      - value: "bash"
+      - value: "sh"
+      - value: "curl"
+      - value: "wget"
+  mitreAttackVectors:
+  - tactic: "TA0002"
+    techniques:
+    - "T1059"
+  - tactic: "TA0011"
+    techniques:
+    - "T1105"
+  criteriaLocked: true
+  mitreVectorsLocked: true
+  isDefault: false
