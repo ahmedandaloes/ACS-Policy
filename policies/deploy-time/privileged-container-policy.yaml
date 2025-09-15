@@ -1,0 +1,38 @@
+apiVersion: v1
+kind: Policy
+metadata:
+  name: "Privileged Container"
+  description: "Alert on deployments with privileged containers"
+spec:
+  severity: "HIGH_SEVERITY"
+  disabled: false
+  categories:
+  - "Privileges"
+  - "Container Configuration"
+  lifecycleStages:
+  - "DEPLOY"
+  eventSource: "NOT_APPLICABLE"
+  whitelists: []
+  exclusions:
+  - name: "System critical workloads"
+    deployment:
+      scope:
+        label:
+          key: "security.privileged"
+          value: "required"
+  policyVersion: "1.1"
+  policySections:
+  - sectionName: "Container should not be privileged"
+    policyGroups:
+    - fieldName: "Privileged Container"
+      booleanOperator: "OR"
+      negate: false
+      values:
+      - value: "true"
+  mitreAttackVectors:
+  - tactic: "TA0004"
+    techniques:
+    - "T1068"
+  criteriaLocked: true
+  mitreVectorsLocked: true
+  isDefault: false
